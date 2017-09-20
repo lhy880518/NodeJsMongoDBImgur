@@ -1,0 +1,69 @@
+node를 통한 페이지 구성의 전반적 흐름
+1. cmd 창을 통하여 node server을 실행
+
+2. server.js의 아래 부분을 통하여 설정한 포트번호의 웹 서버를 띄움
+실제로 아래의 소스만 넣으면 서버 띄우기 가능
+var express = require('express');
+var app = express();
+app.set('port', process.env.PORT || 3300);
+app.set('views', __dirname + '/views');
+var server = app.listen(app.get('port'), function(){
+  console.log('Server up : http://localhost:' + app.get('port'));
+});
+
+3. mongodb를 사용하기 위해 server.js에 아래와 같이 선언
+mongoose.connect('mongodb://localhost/leeimgur');
+mongoose.connection.on('open', function(){
+  console.log('Mongoose connected.');
+});
+
+4. http://localhost:3300/ 이후의 어떤식으로 화면을 분기 시킬건지에 대한 설정인 route 설정을 진행
+그리고 그 라우팅설정을 사용한다는 선언은 server.js소스
+var config = require('./server/configure');
+app = config(app);로 선언
+
+5. configure.js 에서는 설정해야하는것들을 코딩 - 미들웨어, 라우팅 사용 선언
+미들웨어 사용은 아래와 같이 선언
+app.use();
+
+라우팅 사용을 아래와 같이 선언
+var routes = require('./routes');
+routes(app);
+
+중요한 미들웨어인 express-handlebars
+app.engine(
+  'handlebars', exphbs.create({
+    defaultLayout: 'main',//디폴트 레이아웃명.handlebars 가 호출되도록 설정
+    //layoutsDir : The string name or path of a template in the layoutsDir to use as the default layout
+    //디폴트 레이아웃의 위치 설정
+    layoutsDir: app.get('views') + '/layouts',// server.js에서 app.set('views')를 설정 해 둠
+    partialsDir: [app.get('views') + '/partials'],
+    helpers:{
+      timeago: function(timestamp){
+        return moment(timestamp).startOf('minute').fromNow();
+      }
+    }
+  }).engine);
+위와 같이 사용하는데 가장 바깥쪽의 틀을 main.handlebars로 사용하는데 그 defaultLayout의 위치는 layoutsDir로 선언
+나머지 파티션들의 위치는 partialsDir로 선언
+app.set('view engine', 'handlebars');
+
+6. routes.js
+var express = require('express');
+var router = express.Router();
+를 사용하여
+module.exports = function(app){
+  console.log('This is Route.function()');
+  // /로 페이지 호출하게되면 home모듈에 의 index함수를 호출
+  router.get('/', home.index);
+  router.get('/images/:image_id', image.index);
+  router.post('/images',upload.single('file') ,image.create);
+  router.post('/images/:image_id/like', image.like);
+  router.post('/images/:image_id/comment', image.comment);
+  app.use(router);
+};
+
+아래와 같이 분기처리하는데
+var home = require('../controllers/home');
+var image = require('../controllers/image');
+컨트롤러 내부에 함수를 설정하여 컨트롤러 내부에서 어떻게 처리 할지 정함

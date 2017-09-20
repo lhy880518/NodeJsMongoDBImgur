@@ -1,0 +1,53 @@
+/*var outer = 10;
+function myFunction(){
+  var inner = 2;
+  console.log(inner); // 2
+  console.log(outer); // 10
+};
+
+//require the mongoClient from mongodb module
+//mongodb 모듈의 omgoClient를 요청
+var MongoClient = require('mongodb').MongoClient;
+
+//mongodb configs
+//mongodb 환경변수 설정
+var connectionUrl = 'mongodb://localhost:27017/myproject',
+    sampleCollection = 'chapters';
+
+//We need to insert these chapters into mongoDB
+var chapters = [{
+    'Title': 'Snow Crash',
+    'Author': 'Neal Stephenson'
+
+},{
+    'Title': 'Snow Crash',
+    'Author': 'Neal Stephenson'
+}];
+
+MongoClient.connect(connectionUrl, function(err, db) {
+
+  console.log("Connected correctly to server");
+
+  // Get some collection
+  var collection = db.collection(sampleCollection);
+
+  collection.insert(chapters,function(error,result){
+    //here result will contain an array of records inserted
+    if(!error) {
+      console.log("Success :"+result.ops.length+" chapters inserted!");
+    } else {
+      console.log("Some error was encountered!");
+    }
+    db.close();
+  });
+});*/
+
+/*var express = require('express');
+
+var app = express();
+app.get('/', function(req,res){
+  res.send('Express Test');
+});
+
+app.listen(3300);
+*/

@@ -1,0 +1,6 @@
+삭제 기능 추가 관련 메모
+
+1. 삭제 클릭 시 분기되어질 router.js에다가 기능 추가
+router.delete('/images/:image_id', image.remove);
+
+2. image.js에 remove: function(req, res) 함수 추가
