@@ -21,7 +21,8 @@ app.set('views', __dirname + '/views');
 //함수 호출을 하였는데 위의 var config = require('./server/configure'); 이걸따라서 configure.js를 살펴보러 이동
 app = config(app);
 
-mongoose.connect('mongodb://localhost/leeimgur');
+//mongoose.connect('mongodb://localhost/leeimgur');
+mongoose.connect('mongodb://lhy880518:7164gusdyd@ds143744.mlab.com:43744/leeimgur');
 mongoose.connection.on('open', function(){
   console.log('Mongoose connected.');
 });
